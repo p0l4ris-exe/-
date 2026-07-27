@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>세광공업고등학교 홈페이지</title>
+<style>
+:root {
+--school-blue: #1b365d;
+--school-gold: #c5a059;
+--bg-gray: #f4f6f9;
+--card-bg: #ffffff;
+--text-dark: #222222;
+--text-sub: #666666;
+--alert-red: #d9534f;
+}
+
+body {
+background-color: var(--bg-gray);
+color: var(--text-dark);
+font-family: 'Malgun Gothic', -apple-system, sans-serif;
+margin: 0;
+padding: 0;
+display: flex;
+flex-direction: column;
+align-items: center;
+min-height: 100vh;
+}
+
+/* 상단 헤더 & 네비게이션 */
+header {
+width: 100%;
+background-color: var(--school-blue);
+color: white;
+padding: 15px 20px;
+text-align: center;
+box-sizing: border-box;
+border-bottom: 3px solid var(--school-gold);
+}
+
+header h1 {
+margin: 0;
+font-size: 20px;
+letter-spacing: 1px;
+}
+
+header p {
+margin: 4px 0 0 0;
+font-size: 11px;
+color: var(--school-gold);
+}
+
+.container {
+width: 100%;
+max-width: 500px;
+padding: 20px;
+box-sizing: border-box;
+}
+
+/* 메인 로그인 박스 */
+.login-card {
+background: var(--card-bg);
+border-radius: 12px;
+padding: 25px;
+box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+margin-bottom: 20px;
+}
+
+.login-card h2 {
+font-size: 16px;
+margin-top: 0;
+color: var(--school-blue);
+border-bottom: 2px solid var(--bg-gray);
+padding-bottom: 10px;
+}
+
+.input-group {
+margin-bottom: 12px;
+}
+
+.input-group label {
+display: block;
+font-size: 12px;
+color: var(--text-sub);
+margin-bottom: 5px;
+}
+
+.input-group input {
+width: 100%;
+padding: 12px;
+border: 1px solid #ccc;
+border-radius: 6px;
+box-sizing: border-box;
+font-size: 14px;
+}
+
+button.btn-login {
+width: 100%;
+padding: 12px;
+background-color: var(--school-blue);
+color: white;
+border: none;
+border-radius: 6px;
+font-weight: bold;
+font-size: 14px;
+cursor: pointer;
+margin-top: 8px;
+}
+
+#login-msg {
+font-size: 12px;
+color: var(--alert-red);
+margin-top: 10px;
+text-align: center;
+}
+
+/* 게시판 공통 스타일 */
+.board-view {
+display: none;
+background: var(--card-bg);
+border-radius: 12px;
+padding: 20px;
+box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.board-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+border-bottom: 2px solid var(--school-blue);
+padding-bottom: 10px;
+margin-bottom: 15px;
+}
+
+.board-title {
+font-size: 16px;
+font-weight: bold;
+color: var(--school-blue);
+}
+
+.btn-logout {
+font-size: 11px;
+padding: 4px 8px;
+background: #888;
+color: white;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+}
+
+.post-item {
+border-bottom: 1px solid #eee;
+padding: 12px 0;
+}
+
+.post-item:last-child {
+border-bottom: none;
+}
+
+.post-title {
+font-size: 14px;
+font-weight: bold;
+margin-bottom: 4px;
+color: #333;
+}
+
+.post-meta {
+font-size: 11px;
+color: var(--text-sub);
+margin-bottom: 6px;
+}
+
+.post-content {
+font-size: 13px;
+line-height: 1.5;
+color: #444;
+background: #fafafa;
+padding: 10px;
+border-radius: 6px;
+}
+
+/* 교직원 전용 게시판 스타일 */
+.teacher-mode {
+background-color: #121316;
+color: #e0e0e0;
+}
+
+.teacher-mode header {
+background-color: #0a0b0d;
+border-bottom: 3px solid var(--alert-red);
+}
+
+.teacher-board {
+background: #1c1e24;
+border: 1px solid #2c2f38;
+}
+
+.teacher-board .board-title {
+color: var(--alert-red);
+}
+
+.teacher-board .post-item {
+border-bottom: 1px solid #2c2f38;
+}
+
+.teacher-board .post-title {
+color: #fff;
+}
+
+.teacher-board .post-content {
+background: #141519;
+color: #ccc;
+border-left: 3px solid var(--alert-red);
+}
+
+.urgent-tag {
+color: var(--alert-red);
+font-size: 10px;
+font-weight: bold;
+border: 1px solid var(--alert-red);
+padding: 1px 4px;
+border-radius: 3px;
+margin-right: 4px;
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>SEGWANG TECHNICAL HIGH SCHOOL</h1>
+<p>성실 · 창의 · 협동 | 세광공업고등학교 종합정보시스템</p>
+</header>
+
+<div class="container">
+
+<!-- 1. 로그인 전 메인 화면 -->
+<div id="login-section" class="login-card">
+<h2>교내 종합정보시스템 로그인</h2>
+<div class="input-group">
+<label for="username">아이디 (학번 / 교번)</label>
+<input type="text" id="username" placeholder="아이디 입력">
+</div>
+<div class="input-group">
+<label for="password">비밀번호</label>
+<input type="password" id="password" placeholder="비밀번호 입력">
+</div>
+<button class="btn-login" onclick="handleLogin()">로그인</button>
+<div id="login-msg"></div>
+<p style="font-size: 11px; color: #888; margin-top: 15px; text-align: center;">
+※ 학생 및 교직원 전용 시스템입니다. 외부인의 무단 접근을 금합니다.
+</p>
+</div>
+
+<!-- 2. 학생 전용 게시판 -->
+<div id="student-board" class="board-view">
+<div class="board-header">
+<span class="board-title">🏫 학생 자치 게시판</span>
+<button class="btn-logout" onclick="handleLogout()">로그아웃</button>
+</div>
+
+<div class="post-item">
+<div class="post-title">오늘 매점에 빵 재고 들어옴?</div>
+<div class="post-meta">작성자: 2학년3반 | 14:20</div>
+<div class="post-content">초코소라빵 사야 되는데 2교시 쉬는시간에 가니까 벌써 품절이더라.. 들어오면 댓글좀 부탁</div>
+</div>
+
+<div class="post-item">
+<div class="post-title">기계과 실습실 열쇠 갖고 계신 분</div>
+<div class="post-meta">작성자: 3학년_기계 | 12:45</div>
+<div class="post-content">어제 마지막에 정리하고 열쇠 상담 선생님한테 반납한 사람 누구냐 아침에 실습실 문 안 열려서 30분 서있었음</div>
+</div>
+
+<div class="post-item">
+<div class="post-title">소음 들리는 거 나만 이상함?</div>
+<div class="post-meta">작성자: 익명 | 11:10</div>
+<div class="post-content">건물 지하 쪽에서 웅웅거리는 소리 들리는 거 나만 느껴짐? 공사 소리는 아닌 것 같은데 기계실 쪽 문제인가</div>
+</div>
+
+<div class="post-item">
+<div class="post-title">동아리실 정전 자주 나는 거 열받네</div>
+<div class="post-meta">작성자: 전기과_부장 | 09:30</div>
+<div class="post-content">전기 배선 다시 점검해 달라고 행정실에 말했는데 원래 세광시 이쪽 라인이 전력 불안정하다고만 함 ㅡㅡ</div>
+</div>
+
+<div class="post-item">
+<div class="post-title">상담 선생님 오늘 출근하심?</div>
+<div class="post-meta">작성자: 1학년 | 어제</div>
+<div class="post-content">고민상담 신청해뒀는데 오늘 계속 외출 중이시라고 써있네... 급한 건인데 언제 오시려나ㅠㅠ</div>
+</div>
+
+<div class="post-item">
+<div class="post-title">[공지] 체육대회 일정 연기 안내</div>
+<div class="post-meta">작성자: 학생회 | 2일 전</div>
+<div class="post-content">최근 시내 기상 악화 및 안전 점검 유의 권고로 인해 금주 예정이었던 체육대회 일정이 잠정 연기되었습니다.</div>
+</div>
+</div>
+
+<!-- 3. 선생님 전용 게시판 -->
+<div id="teacher-board" class="board-view teacher-board">
+<div class="board-header">
+<span class="board-title"> 교직원 비상 연락망 & 재난대응</span>
+<button class="btn-logout" onclick="handleLogout()">로그아웃</button>
+</div>
+
+<div class="post-item">
+<div class="post-meta">소유자 계정: 전문상담교사 ■■■ (재난관리국 협력)</div>
+</div>
+
+<div class="post-item">
+<div class="post-title"><span class="urgent-tag">긴급</span>재난 관련</div>
+<div class="post-meta">작성자: ■■■ | ■■:■■</div>
+<div class="post-content">아이들에게는 단순 정전이라고 둘러대고 있지만 더는 못 버팁니다. 지원 인력이 더 없는지 연락 부탁드립니ㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷ████████████████████████████████████████████████████████████████████████████████████████████████</div>
+</div>
+
+<div class="post-item">
+<div class="post-title">RE: 학생들 조기 하교 조치 건</div>
+<div class="post-meta">작성자: 교감 | 1¿:@7</div>
+<div class="post-content">시청 대책본부에서 아직 공식 대피령을 내리지 않았습니다. 단독으로 조기 하교를 시켰다가 혼란이 생기면 책임질 수 없습니다. 일단 자율학습만 중단시키세요.</div>
+</div>
+
+<div class="post-item">
+<div class="post-title">RE: [■■■] 상황이 다릅니다. 이건 테러가 아닙니다.</div>
+<div class="post-meta">작성자: ■■■ | 20:40</div>
+<div class="post-content">곧 구조가 올 겁니다. 그 전까지 학생들이 위험에 노출되지 않게 보호 부탁드립니다.</div>
+</div>
+
+<div class="post-item">
+<div class="post-title">[비밀 기록] 재난관리국 협력 지침 전달</div>
+<div class="post-meta">작성자: ■■■ | 18:10</div>
+<div class="post-content">
+만약 본 단말기가 구조팀에 의해 발견될 경우를 대비해 기록을 남깁니다.<br>
+상담실 내에 있는 제 서랍 안에 두었으니 해당 암호를 이용하시면 됩니다.<br>
+<span style="color: var(--school-gold);"> 0 </span>
+</div>
+</div>
+</div>
+
+</div>
+
+<script>
+function handleLogin() {
+const user = document.getElementById('username').value.trim();
+const pass = document.getElementById('password').value.trim();
+const msg = document.getElementById('login-msg');
+
+// 학생 로그인
+if (user === "이결" && pass === "1031") {
+showView('student-board');
+document.body.classList.remove('teacher-mode');
+}
+// 선생님(호유원) 로그인
+else if (user === "호유원" && pass === "362") {
+showView('teacher-board');
+document.body.classList.add('teacher-mode'); // 교직원 로그인 시 어두운 분위기로 전환
+}
+else {
+msg.innerText = "아이디 또는 비밀번호가 일치하지 않습니다.";
+}
+}
+
+function showView(viewId) {
+document.getElementById('login-section').style.display = 'none';
+document.getElementById('student-board').style.display = 'none';
+document.getElementById('teacher-board').style.display = 'none';
+
+document.getElementById(viewId).style.display = 'block';
+document.getElementById('login-msg').innerText = '';
+}
+
+function handleLogout() {
+document.getElementById('username').value = '';
+document.getElementById('password').value = '';
+document.body.classList.remove('teacher-mode');
+showView('login-section');
+document.getElementById('login-section').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
