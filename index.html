@@ -237,7 +237,7 @@ margin-right: 4px;
 <div id="login-section" class="login-card">
 <h2>교내 종합정보시스템 로그인</h2>
 <div class="input-group">
-<label for="username">아이디 (학번 / 교번)</label>
+<label for="username">아이디 (학번 / 교번 포함)</label>
 <input type="text" id="username" placeholder="아이디 입력">
 </div>
 <div class="input-group">
@@ -344,12 +344,12 @@ const pass = document.getElementById('password').value.trim();
 const msg = document.getElementById('login-msg');
 
 // 학생 로그인
-if (user === "이결" && pass === "1031") {
+if (user === "end1401" && pass === "1031") {
 showView('student-board');
 document.body.classList.remove('teacher-mode');
 }
 // 선생님(호유원) 로그인
-else if (user === "호유원" && pass === "362") {
+else if (user === "hyw925" && pass === "362") {
 showView('teacher-board');
 document.body.classList.add('teacher-mode'); // 교직원 로그인 시 어두운 분위기로 전환
 }
