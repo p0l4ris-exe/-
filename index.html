@@ -25,6 +25,7 @@ display: flex;
 flex-direction: column;
 align-items: center;
 min-height: 100vh;
+transition: background-color 0.3s ease;
 }
 
 /* 상단 헤더 & 네비게이션 */
@@ -36,6 +37,7 @@ padding: 15px 20px;
 text-align: center;
 box-sizing: border-box;
 border-bottom: 3px solid var(--school-gold);
+transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 header h1 {
@@ -121,6 +123,7 @@ background: var(--card-bg);
 border-radius: 12px;
 padding: 20px;
 box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+transition: background 0.3s ease, border 0.3s ease;
 }
 
 .board-header {
@@ -179,7 +182,44 @@ padding: 10px;
 border-radius: 6px;
 }
 
-/* 교직원 전용 게시판 스타일 */
+/* 보안 인증 박스 스타일 (평소 상태) */
+.security-box {
+margin-top: 20px;
+background: #f8f9fa;
+border: 1px dashed #cbd5e1;
+padding: 15px;
+border-radius: 8px;
+text-align: center;
+}
+
+.security-box input {
+padding: 8px;
+width: 60%;
+border: 1px solid #ccc;
+border-radius: 4px;
+font-size: 12px;
+box-sizing: border-box;
+}
+
+.security-box button {
+padding: 8px 12px;
+background: var(--school-blue);
+color: white;
+border: none;
+border-radius: 4px;
+font-weight: bold;
+cursor: pointer;
+font-size: 12px;
+margin-left: 4px;
+}
+
+#sec-msg {
+font-size: 11px;
+color: var(--alert-red);
+margin-top: 6px;
+}
+
+/* ---------------- 교직원 비상 반전 모드 (Dark/Emergency) ---------------- */
 .teacher-mode {
 background-color: #121316;
 color: #e0e0e0;
@@ -190,24 +230,32 @@ background-color: #0a0b0d;
 border-bottom: 3px solid var(--alert-red);
 }
 
-.teacher-board {
+.teacher-mode .teacher-board {
 background: #1c1e24;
 border: 1px solid #2c2f38;
 }
 
-.teacher-board .board-title {
+.teacher-mode .teacher-board .board-header {
+border-bottom: 2px solid var(--alert-red);
+}
+
+.teacher-mode .teacher-board .board-title {
 color: var(--alert-red);
 }
 
-.teacher-board .post-item {
+.teacher-mode .teacher-board .post-item {
 border-bottom: 1px solid #2c2f38;
 }
 
-.teacher-board .post-title {
+.teacher-mode .teacher-board .post-title {
 color: #fff;
 }
 
-.teacher-board .post-content {
+.teacher-mode .teacher-board .post-meta {
+color: #8a8d9b;
+}
+
+.teacher-mode .teacher-board .post-content {
 background: #141519;
 color: #ccc;
 border-left: 3px solid var(--alert-red);
@@ -295,44 +343,46 @@ margin-right: 4px;
 </div>
 </div>
 
-<!-- 3. 선생님 전용 게시판 -->
+<!-- 3. 선생님 전용 게시판 (처음엔 평범 ➔ 보안 인증 시 반전) -->
 <div id="teacher-board" class="board-view teacher-board">
 <div class="board-header">
-<span class="board-title"> 교직원 비상 연락망 & 재난대응</span>
+<span class="board-title" id="t-board-title">📋 교직원 업무 및 공지 게시판</span>
 <button class="btn-logout" onclick="handleLogout()">로그아웃</button>
 </div>
 
 <div class="post-item">
-<div class="post-meta">소유자 계정: 상담교사 ■■■ (재난관리국 협력)</div>
+<div class="post-meta" id="t-owner-info">접속자 계정: 상담교사 (교직원 전용)</div>
+</div>
+
+<!-- 게시물 영역 -->
+<div id="teacher-posts-area">
+<div class="post-item">
+<div class="post-title">[행정실] 금주 교내 전력 점검 협조 요청</div>
+<div class="post-meta">작성자: 행정실장 | 어제</div>
+<div class="post-content">한국전력 세광변전소 측에서 야간 노후 선로 점검을 예고해 왔습니다. 각 학급 및 실습실 멀티탭 전원을 차단해 주시기 바랍니다.</div>
 </div>
 
 <div class="post-item">
-<div class="post-title"><span class="urgent-tag">긴급</span>재난 관련</div>
-<div class="post-meta">작성자: 3학년 국어 | ■■:■■</div>
-<div class="post-content">아이들에게는 단순 정전이라고 둘러대고 있지만 더는 못 버팁니다. 지원 인력이 더 없는지 연락 부탁드립니ㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷ██████████████████</div>
+<div class="post-title">[학부모상담] 3학년 2반 진로 상담 일정 변경</div>
+<div class="post-meta">작성자: 교무부장 | 3일 전</div>
+<div class="post-content">금일 예정되었던 학부모 상담은 우천 및 외부 출장 일정으로 인해 다음 주 화요일로 연기되었습니다.</div>
 </div>
 
 <div class="post-item">
-<div class="post-title">RE: 학생들 조기 하교 조치 건</div>
-<div class="post-meta">작성자: 교감 | 0¿:@7</div>
-<div class="post-content">시청 대책본부에서 아직 공식 대피령을 내리지 않았습니다. 단독으로 조기 하교를 시켰다가 혼란이 생기면 책임질 수 없습니다. 일단 자율학습만 중단시키세요.</div>
+<div class="post-title">[보건실] 환절기 감기 환자 급증 주의</div>
+<div class="post-meta">작성자: 보건교사 | 4일 전</div>
+<div class="post-content">최근 일교차가 커지면서 기침 증세를 보이는 학생들이 늘고 있습니다. 각 담임 선생님들께서는 자가진단 키트 배부를 협조해 주세요.</div>
+</div>
 </div>
 
-<div class="post-item">
-<div class="post-title">RE: [■■■] 상황이 다릅니다. 이건 테러가 아닙니다.</div>
-<div class="post-meta">작성자: ■■■ | 11:40</div>
-<div class="post-content">곧 구조가 올 겁니다. 그 전까지 학생들이 위험에 노출되지 않게 보호 부탁드립니다.</div>
+<!-- 암호 입력창 -->
+<div class="security-box" id="sec-box">
+<p style="font-size: 12px; font-weight: bold; margin: 0 0 8px 0; color: #475569;">🔒 재난관리국 연계 보안 채널</p>
+<input type="password" id="secret-code" placeholder="보안 암호 입력">
+<button onclick="unlockSecret()">인증</button>
+<div id="sec-msg"></div>
 </div>
 
-<div class="post-item">
-<div class="post-title">[비밀 기록] 재난관리국 협력 지침 전달</div>
-<div class="post-meta">작성자: ■■■ | 4달 전</div>
-<div class="post-content">
-만약 본 단말기가 구조팀에 의해 발견될 경우를 대비해 기록을 남깁니다.<br>
-상담실 내에 있는 제 서랍 안에 두었으니 해당 암호를 이용하시면 됩니다.<br>
-<span style="color: var(--school-gold);"> 0 </span>
-</div>
-</div>
 </div>
 
 </div>
@@ -348,10 +398,10 @@ if (user === "end1401" && pass === "1031") {
 showView('student-board');
 document.body.classList.remove('teacher-mode');
 }
-// 선생님(호유원) 로그인
+// 선생님 로그인 (처음 진입 시에는 평범한 상태로 설정)
 else if (user === "hyw925" && pass === "362") {
+resetTeacherBoard();
 showView('teacher-board');
-document.body.classList.add('teacher-mode'); // 교직원 로그인 시 어두운 분위기로 전환
 }
 else {
 msg.innerText = "아이디 또는 비밀번호가 일치하지 않습니다.";
@@ -373,6 +423,78 @@ document.getElementById('password').value = '';
 document.body.classList.remove('teacher-mode');
 showView('login-section');
 document.getElementById('login-section').style.display = 'block';
+}
+
+// 선생님 게시판을 일반 모드로 초기화하는 함수
+function resetTeacherBoard() {
+document.body.classList.remove('teacher-mode');
+document.getElementById('t-board-title').innerText = "📋 교직원 업무 및 공지 게시판";
+document.getElementById('t-owner-info').innerText = "접속자 계정: 상담교사 (교직원 전용)";
+document.getElementById('sec-box').style.display = 'block';
+document.getElementById('secret-code').value = '';
+document.getElementById('sec-msg').innerText = '';
+
+document.getElementById('teacher-posts-area').innerHTML = `
+<div class="post-item">
+<div class="post-title">[행정실] 금주 교내 전력 점검 협조 요청</div>
+<div class="post-meta">작성자: 행정실장 | 어제</div>
+<div class="post-content">한국전력 세광변전소 측에서 야간 노후 선로 점검을 예고해 왔습니다. 각 학급 및 실습실 멀티탭 전원을 차단해 주시기 바랍니다.</div>
+</div>
+<div class="post-item">
+<div class="post-title">[학부모상담] 3학년 2반 진로 상담 일정 변경</div>
+<div class="post-meta">작성자: 교무부장 | 3일 전</div>
+<div class="post-content">금일 예정되었던 학부모 상담은 우천 및 외부 출장 일정으로 인해 다음 주 화요일로 연기되었습니다.</div>
+</div>
+<div class="post-item">
+<div class="post-title">[보건실] 환절기 감기 환자 급증 주의</div>
+<div class="post-meta">작성자: 보건교사 | 4일 전</div>
+<div class="post-content">최근 일교차가 커지면서 기침 증세를 보이는 학생들이 늘고 있습니다. 각 담임 선생님들께서는 자가진단 키트 배부를 협조해 주세요.</div>
+</div>
+`;
+}
+
+// 비밀번호 인증 시 비상 게시판으로 반전되는 함수
+function unlockSecret() {
+const code = document.getElementById('secret-code').value.trim();
+const secMsg = document.getElementById('sec-msg');
+
+// 비밀 인증 암호를 '362' (또는 원하시는 보안 암호)로 설정
+if (code === "ghdhwoax") {
+document.body.classList.add('teacher-mode');
+document.getElementById('t-board-title').innerText = "🚨 교직원 비상 연락망 & 재난대응";
+document.getElementById('t-owner-info').innerText = "소유자 계정: 상담교사 ■■■ (재난관리국 협력)";
+document.getElementById('sec-box').style.display = 'none';
+
+// 기괴한 비상 게시글 내용으로 전환
+document.getElementById('teacher-posts-area').innerHTML = `
+<div class="post-item">
+<div class="post-title"><span class="urgent-tag">긴급</span>재난 관련</div>
+<div class="post-meta">작성자: 3학년 국어 | ■■:■■</div>
+<div class="post-content">아이들에게는 단순 정전이라고 둘러대고 있지만 더는 못 버팁니다. 지원 인력이 더 없는지 연락 부탁드립니ㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷ██████████████████</div>
+</div>
+<div class="post-item">
+<div class="post-title">RE: 학생들 조기 하교 조치 건</div>
+<div class="post-meta">작성자: 교감 | 0¿:@7</div>
+<div class="post-content">시청 대책본부에서 아직 공식 대피령을 내리지 않았습니다. 단독으로 조기 하교를 시켰다가 혼란이 생기면 책임질 수 없습니다. 일단 자율학습만 중단시키세요.</div>
+</div>
+<div class="post-item">
+<div class="post-title">RE: [■■■] 상황이 다릅니다. 이건 테러가 아닙니다.</div>
+<div class="post-meta">작성자: ■■■ | 11:40</div>
+<div class="post-content">곧 구조가 올 겁니다. 그 전까지 학생들이 위험에 노출되지 않게 보호 부탁드립니다.</div>
+</div>
+<div class="post-item">
+<div class="post-title">[비밀 기록] 재난관리국 협력 지침 전달</div>
+<div class="post-meta">작성자: ■■■ | 4달 전</div>
+<div class="post-content">
+만약 본 단말기가 구조팀에 의해 발견될 경우를 대비해 기록을 남깁니다.<br>
+상담실 내에 있는 제 서랍 안에 두었으니 해당 암호를 이용하시면 됩니다.<br>
+<span style="color: var(--school-gold);"> 0 </span>
+</div>
+</div>
+`;
+} else {
+secMsg.innerText = "보안 암호가 올바르지 않습니다.";
+}
 }
 </script>
 
